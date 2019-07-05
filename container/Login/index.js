@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, ImageBackground, TextInput, Button, Dimensions } from 'react-native';
-
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import * as actions from './actionCreator';
+import { StackActions, NavigationActions } from 'react-navigation';
 const { width, height } = Dimensions.get('window');
 
-export default class Login extends Component {
+class Login extends Component {
   constructor() {
     super();
     this.state = {
@@ -16,22 +19,22 @@ export default class Login extends Component {
     }
   }
 
-  // componentWillReceiveProps(nextProps) {
-  //     if(nextProps.loginSuccess && nextProps.loginSuccess) {
-  //        this.props.navigation
-  //       .dispatch(StackActions.reset(
-  //         {
-  //           index: 0,
-  //           actions: [
-  //             NavigationActions.navigate({ routeName: 'Dashboard' })
-  //           ]
-  //         }))
-  //       }
-  //       else{
-  //         alert("Please Enter with Valid Credentials");
-  //       }
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.loginState===true){
+      this.props.navigation.dispatch(StackActions.reset({
+        index:0,
+        actions:[NavigationActions.navigate({routeName:'Dashboard'})]
+      }))
+    }
+    else{
+      this.setState({
+        showemailErrorMessage:true,
+        showpasswrdErrorMessage:true
+      })
+    }
+  }
 
-  // }
+  
   validateUsername(text) {
     let re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     this.setState({ username: text, isValidEmail: re.test(text), showemailErrorMessage: false });
@@ -75,18 +78,24 @@ export default class Login extends Component {
           onChangeText={text => this.validatePassword(text)} 
           onEndEditing={() => this.showerrorMessage()}>
           </TextInput>
-
           <Text style={[this.state.showpasswrdErrorMessage ? { color: 'red' } : { color: 'grey' },{textAlign:'center'}]}>
             {this.state.showpasswrdErrorMessage ? "Retry Password" : this.state.isValidPassword ? "" : "(Password Length should be > 7)"}</Text>
           <Button style={[styles.buttonStyle, { backgroundColor: (!this.state.isValidEmail && !this.state.isValidPassword) ? '#fff' : null }]} disabled={!this.state.isValidEmail && !this.state.isValidPassword}
-            // onPress={() => { this.props.actions.validateLogin({ username: this.state.username, password: this.state.password }) }} 
+            onPress={() => { this.props.action.loginMethod({username:this.state.username,password:this.state.password}) }} 
             title={'Login'}></Button>
         </View>
-
       </ImageBackground>
     )
   }
 }
+
+const mapDispatchToProps = (dispatch) =>({
+  action:bindActionCreators(actions,dispatch)
+})
+
+const mapStateToProps = ( state ) => ({
+ loginState : state.loginReducer.isLoginSuccess
+})
 
 const styles = StyleSheet.create({
   container: {
@@ -111,7 +120,6 @@ const styles = StyleSheet.create({
     fontSize: 30
   },
   textInputStyle: {
-    minWidth: 150,
     backgroundColor: 'transparent',
     borderRadius: 35,
     borderWidth: 2,
@@ -126,3 +134,5 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   }
 });
+
+export default connect(mapStateToProps,mapDispatchToProps)(Login);

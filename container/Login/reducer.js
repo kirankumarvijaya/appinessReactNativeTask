@@ -14,13 +14,13 @@ switch(action.type) {
     case LOGIN_SUCCESS:{
         return {
             ...prevState,
-            isLoginSuccess:true,
+            isLoginSuccess:action.loginData.loginSuccess,
         }
     }
     case LOGIN_FAILURE:{
         return {
             ...prevState,
-            isLoginSuccess:false,
+            isLoginSuccess:action.loginData.loginSuccess,
         }
     }
     default:{

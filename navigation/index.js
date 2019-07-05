@@ -1,5 +1,6 @@
 import {createStackNavigator,createAppContainer} from 'react-navigation';
 import LoginPage from '../container/Login';
+import Dashboard from '../container/Dashboard';
 
 const AppNavigation = createStackNavigator({
     LoginPage:{
@@ -7,6 +8,9 @@ const AppNavigation = createStackNavigator({
         navigationOptions:{
             header:null
         }
+    },
+    Dashboard:{
+        screen:Dashboard
     }
 },
 {

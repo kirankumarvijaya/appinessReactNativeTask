@@ -1,21 +1,23 @@
 import {LOGIN} from './actionTypes';
-import {takeEvery,put} from 'redux-saga/effects';
+import {takeLatest,put} from 'redux-saga/effects';
 import * as loginData from '../../JSON/login.json';
 import {loginMethodSuccess,loginMethodFailure} from './actionCreator';
 
 function* loginSaga(action){
     let data = yield loginData;
-    let { username, password } = action.data;
+    let { username, password } = action.dataload;
     if ((data.username === username)&&(data.password === password)) {
-        yield put(loginMethodSuccess({ loginSuccess: 'true' }))
+        console.log('Coming here @positive')
+        yield put(loginMethodSuccess({ loginSuccess: true }))
     }
     else {
-        yield put(loginMethodFailure({ loginSuccess: 'false' }))
+        console.log('Coming here @negative')
+        yield put(loginMethodFailure({ loginSuccess: false }))
     }
 }
 
 
 
 export function* loginWatchers(){
-    yield takeEvery(loginSaga,LOGIN);
+    yield takeLatest(LOGIN,loginSaga);
 }
