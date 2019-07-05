@@ -60,27 +60,37 @@ class Login extends Component {
       <ImageBackground source={require('../../assets/loginbg.jpg')} style={styles.container} imageStyle={{ resizeMode: 'cover' }}>
         <View style={styles.innerContainer}>
           <Text style={styles.textStyle}>Login</Text>
+          
           <TextInput 
             value={this.state.username} 
             placeholder="Username"
             placeholderTextColor="white"
-            keyboardType={'email-address'} 
+            keyboardType={'email-address'}
+            returnKeyType="next"
+            onSubmitEditing={()=> this.passwordInput.focus() }
+            blurOnSubmit = {false} 
             style={[styles.textInputStyle, this.state.isValidEmail === null ? { borderColor: 'white' } : this.state.isValidEmail ? { borderColor: 'green' } : { borderColor: 'red' }]} 
             onChangeText={text => this.validateUsername(text)} onEndEditing={() => this.showMessage()}>
             </TextInput>
+          
           <Text style={this.state.showemailErrorMessage ? { color: 'red' } : null}>
             {this.state.showemailErrorMessage ? 'Please enter a valid email' : " "}</Text>
+          
           <TextInput 
           value={this.state.password}
+          ref = { inp => { this.passwordInput = inp;}}
           placeholder="Password" 
           secureTextEntry={true} 
           style={[styles.textInputStyle, this.state.isValidPassword === null ? { borderColor: 'white' } : this.state.isValidPassword ? { borderColor: 'green' } : { borderColor: 'red' }]} 
           onChangeText={text => this.validatePassword(text)} 
           onEndEditing={() => this.showerrorMessage()}>
           </TextInput>
+         
           <Text style={[this.state.showpasswrdErrorMessage ? { color: 'red' } : { color: 'grey' },{textAlign:'center'}]}>
             {this.state.showpasswrdErrorMessage ? "Retry Password" : this.state.isValidPassword ? "" : "(Password Length should be > 7)"}</Text>
-          <Button style={[styles.buttonStyle, { backgroundColor: (!this.state.isValidEmail && !this.state.isValidPassword) ? '#fff' : null }]} disabled={!this.state.isValidEmail && !this.state.isValidPassword}
+          
+          <Button style={[styles.buttonStyle, { backgroundColor: (!this.state.isValidEmail && !this.state.isValidPassword) ? '#fff' : null }]} 
+            disabled={!this.state.isValidEmail && !this.state.isValidPassword}
             onPress={() => { this.props.action.loginMethod({username:this.state.username,password:this.state.password}) }} 
             title={'Login'}></Button>
         </View>
