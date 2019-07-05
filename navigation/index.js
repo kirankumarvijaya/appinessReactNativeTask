@@ -1,6 +1,8 @@
 import {createStackNavigator,createAppContainer} from 'react-navigation';
 import LoginPage from '../container/Login';
 import Dashboard from '../container/Dashboard';
+import React from 'react';
+import {Image} from 'react-native'
 
 const AppNavigation = createStackNavigator({
     LoginPage:{
@@ -10,7 +12,21 @@ const AppNavigation = createStackNavigator({
         }
     },
     Dashboard:{
-        screen:Dashboard
+        screen:Dashboard,
+        navigationOptions:{
+            title:'DashBoard',
+            headerStyle: {
+                backgroundColor: 'black',
+              },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+                fontWeight: 'bold',
+                textAlign:'center'
+            },
+            headerRight:(
+                <Image source={require('../assets/appinesslogo.png')}></Image>
+            )
+        }
     }
 },
 {
